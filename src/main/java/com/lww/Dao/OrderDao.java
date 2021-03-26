@@ -20,51 +20,41 @@ import java.util.*;
 
 @Component
 public class OrderDao {
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @Autowired
     UserDao userDao;
-
     public void save(Order order) {
         User user = order.getUser();
-        Map<String, Object> params = JdbcTemplate.updateAndGetKey("insert into orders (total,ordertime,state,uid,name,phone,addr) values (?,?,?,?,?,?,?)", order.getTotal(), order.getOrdertime(), order.getState(),
-                user.getUid(), user.getName(), user.getPhone(), user.getAddr());
-        ResultSet rs = (ResultSet) params.get("resultSet");
-        PreparedStatement PreparedStatement = (java.sql.PreparedStatement) params.get("PreparedStatement");
-        Connection Connection = (java.sql.Connection) params.get("Connection");
         //得到自动生成的主键oid
-        Integer generatorId = null;
-        try {
-            if (rs.next()) {
-                System.out.println("jj");
-                generatorId = rs.getInt(1);
-            }
-            rs.close();
-            PreparedStatement.close();
-            Connection.close();
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
+        Integer generatorId = jdbcTemplate.updateAndGetKey("insert into orders (total,ordertime,state,uid,name,phone,addr) values (?,?,?,?,?,?,?)", order.getTotal(), order.getOrdertime(), order.getState(),
+                user.getUid(), user.getName(), user.getPhone(), user.getAddr());
+
+        System.out.println(generatorId);
+
         Set<OrderItem> orderItems = order.getOrderItems();
         //把关联的OrderItems 也存进数据库
         for (OrderItem item : orderItems) {
             item.setOid(generatorId);
-            JdbcTemplate.update("insert into orderitem (count,subtotal,pid,oid) values(?,?,?,?)", item.getCount(), item.getSubtotal(), item.getPid(), item.getOid());
+            jdbcTemplate.update("insert into orderitem (count,subtotal,pid,oid) values(?,?,?,?)", item.getCount(), item.getSubtotal(), item.getPid(), item.getOid());
         }
         // System.out.println(generatorId);
     }
 
     public List<Order> getOrdersByUid(Integer uid) {
 
-        List<Order> list = (List<Order>) JdbcTemplate.query("select * from orders where uid = ?", new BeanListHandler<>(Order.class), uid);
-
+        List<Order> list = (List<Order>) jdbcTemplate.query("select * from orders where uid = ?", new BeanListHandler<>(Order.class), uid);
 
         //查询下面的子orderItem
 
         //先一次性查出所有的orderItems
-        List<OrderItem> orderItems = JdbcTemplate.query("select * from orderitem", new BeanListHandler<>(OrderItem.class));
+        List<OrderItem> orderItems = jdbcTemplate.query("select * from orderitem", new BeanListHandler<>(OrderItem.class));
         System.out.println(orderItems);
         //查orderItem里面products。。。。。
         //封装：
-        List<Product> products = JdbcTemplate.query("select * from product", new BeanListHandler<>(Product.class));
+        List<Product> products = jdbcTemplate.query("select * from product", new BeanListHandler<>(Product.class));
         for (OrderItem orderItem : orderItems) {
             for (int p = 0; p < products.size(); p++) {
                 if (orderItem.getPid() == products.get(p).getPid()) {
@@ -87,21 +77,21 @@ public class OrderDao {
             }
             order.setOrderItems(set);
         }
-        System.out.println(list);
+        //System.out.println(list);
         return list;
     }
 
     public List<Order> findAll() {
 
-        return JdbcTemplate.query("select * from orders",new BeanListHandler<>(Order.class));
+        return jdbcTemplate.query("select * from orders",new BeanListHandler<>(Order.class));
     }
 
     public List<OrderItem> getItemsByOid(Integer Oid){
-        List<OrderItem> orderItems=JdbcTemplate.query("select * from orderitem where oid = ?",new BeanListHandler<>(OrderItem.class),Oid);
+        List<OrderItem> orderItems=jdbcTemplate.query("select * from orderitem where oid = ?",new BeanListHandler<>(OrderItem.class),Oid);
 
         //查orderItem里面products。。。。。
         //封装：
-        List<Product> products = JdbcTemplate.query("select * from product", new BeanListHandler<>(Product.class));
+        List<Product> products = jdbcTemplate.query("select * from product", new BeanListHandler<>(Product.class));
         for (OrderItem orderItem : orderItems) {
             for (int p = 0; p < products.size(); p++) {
                 if (orderItem.getPid() == products.get(p).getPid()) {
@@ -114,12 +104,11 @@ public class OrderDao {
     }
 
     public Order getByOid(Integer Oid) {
-        return (Order) JdbcTemplate.query("select * from orders where oid = ?", new BeanHandler<>(Order.class), Oid);
+        return (Order) jdbcTemplate.query("select * from orders where oid = ?", new BeanHandler<>(Order.class), Oid);
     }
 
-
     public void updateState(Order currentOrder) {
-        JdbcTemplate.update("update orders set state = ? where oid = ?",
+        jdbcTemplate.update("update orders set state = ? where oid = ?",
                currentOrder.getState(),currentOrder.getOid());
     }
 }

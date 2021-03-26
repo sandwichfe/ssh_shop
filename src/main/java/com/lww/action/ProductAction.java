@@ -91,6 +91,8 @@ public class ProductAction extends ActionSupport implements ModelDriven<Product>
         //将pageBean放入值栈中
         ActionContext.getContext().getValueStack().set("pageBean",productPageBean);
         System.out.println(productPageBean);
+
+        ActionContext.getContext().getValueStack().setValue("cid",cid);
         return "findByCid";
     }
 

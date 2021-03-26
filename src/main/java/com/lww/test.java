@@ -3,6 +3,7 @@ package com.lww;
 
 import com.lww.Dao.OrderDao;
 import com.lww.Enity.User;
+import com.lww.utils.JDBCUtil.JdbcTemplate;
 import com.lww.vo.Order;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,8 +18,10 @@ public class test {
     @Test
     public void test1() {
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("classpath:application.xml");
-    }
 
+        JdbcTemplate jdbcTemplate=ctx.getBean(JdbcTemplate.class);
+        jdbcTemplate.getConn();
+    }
 
     @Test
     public void test2() {
@@ -29,8 +32,6 @@ public class test {
         log.error("error级别日志");
     }
 
-
-
     @Test
     public void test3() {
         ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("classpath:application.xml");
@@ -38,9 +39,8 @@ public class test {
         Order order = new Order();
         User user = new User();
         user.setUid(7);
-        user.setName("fd");
+        user.setName("fd1145");
         order.setUser(user);
         orderDao.save(order);
     }
-
 }
