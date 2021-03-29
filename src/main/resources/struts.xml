@@ -41,6 +41,7 @@
         <action name="product_*" class="com.lww.action.ProductAction" method="{1}">
             <result name="findByPid">/WEB-INF/jsp/product.jsp</result>
             <result name="findByCid">/WEB-INF/jsp/productList.jsp</result>
+            <result name="findByCsid">/WEB-INF/jsp/productList.jsp</result>
         </action>
 
         <action name="cart_*" class="com.lww.action.CartAction" method="{1}">

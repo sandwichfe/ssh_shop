@@ -2,6 +2,7 @@ package com.lww.action;
 
 import com.lww.Dao.OrderDao;
 import com.lww.Enity.User;
+import com.lww.sevice.OrderService;
 import com.lww.utils.pageUtils.PageBean;
 import com.lww.vo.Cart;
 import com.lww.vo.CartItem;
@@ -27,7 +28,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
     }
 
     @Autowired
-    private OrderDao orderDao;
+    private OrderService orderService;
 
     //接受page参数
     private  Integer page;
@@ -69,7 +70,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
             return "login";
         }
         order.setUser(loginUser);
-        orderDao.save(order);
+        orderService.save(order);
 
 
         //提交订单后 清空购物车
@@ -83,7 +84,7 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
     //通过用户id 查询订单
     public String findByUid(){
         User user= (User) ServletActionContext.getRequest().getSession().getAttribute("loginUser");
-        List<Order> list=orderDao.getOrdersByUid(user.getUid());
+        List<Order> list=orderService.getOrdersByUid(user.getUid());
         PageBean<Order> pageBean=new PageBean<>();
         pageBean.setList(list);
         //存入到值栈中
@@ -93,10 +94,10 @@ public class OrderAction extends ActionSupport implements ModelDriven<Order> {
 
     //修改订单状态  确认收货
     public String updateState(){
-        Order currentOrder=orderDao.getByOid(order.getOid());
+        Order currentOrder=orderService.getByOid(order.getOid());
         //修改订单状态
         currentOrder.setState(4);
-        orderDao.updateState(currentOrder);
+        orderService.updateState(currentOrder);
         return "updateStateSuccess";
     }
 }

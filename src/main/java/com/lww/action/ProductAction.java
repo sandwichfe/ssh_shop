@@ -2,6 +2,8 @@ package com.lww.action;
 
 import com.lww.Dao.CategoryDao;
 import com.lww.Dao.ProductDao;
+import com.lww.sevice.CategoryService;
+import com.lww.sevice.ProductService;
 import com.lww.utils.pageUtils.PageBean;
 import com.lww.vo.Category;
 import com.lww.vo.Product;
@@ -38,10 +40,10 @@ public class ProductAction extends ActionSupport implements ModelDriven<Product>
     }
 
     @Autowired
-    private ProductDao productDao;
+    private ProductService productService;
 
     @Autowired
-    private CategoryDao categoryDao;
+    private CategoryService categoryService;
 
 
     //根据商品的Id查询商品信息
@@ -55,7 +57,7 @@ public class ProductAction extends ActionSupport implements ModelDriven<Product>
 
         //方式二
         //因为模型驱动就是在栈顶的，在赋值之前ParamProduct里面只有pid有值，  此时赋值之后里面的属性全部有值，后面跳转jsp直接从它里面去取即可。
-        ParamProduct = productDao.get(ParamProduct.getPid());
+        ParamProduct = productService.get(ParamProduct.getPid());
         return "findByPid";
     }
 
@@ -75,7 +77,7 @@ public class ProductAction extends ActionSupport implements ModelDriven<Product>
         int limit = 8;
         productPageBean.setLimit(limit);
         int totalCount = 0;
-        totalCount = productDao.findCountByCid(cid);
+        totalCount = productService.findCountByCid(cid);
         productPageBean.setTotalCount(totalCount);
         int totalPage = 0;
         if (totalCount % limit == 0) {
@@ -86,7 +88,7 @@ public class ProductAction extends ActionSupport implements ModelDriven<Product>
         //从哪条记录数开始
       int  begin=(page-1)*limit;
         productPageBean.setTotalPage(totalPage);
-        List<Product> list=productDao.getProductsByCid(cid,begin,limit);
+        List<Product> list=productService.getProductsByCid(cid,begin,limit);
         productPageBean.setList(list);
         //将pageBean放入值栈中
         ActionContext.getContext().getValueStack().set("pageBean",productPageBean);
@@ -94,6 +96,33 @@ public class ProductAction extends ActionSupport implements ModelDriven<Product>
 
         ActionContext.getContext().getValueStack().setValue("cid",cid);
         return "findByCid";
+    }
+
+    //根据二级分类id查询商品
+    public String getProductsByCsid() {
+        PageBean<Product> productPageBean = new PageBean<>();
+        productPageBean.setPage(page);
+        int limit = 8;
+        productPageBean.setLimit(limit);
+        int totalCount = 0;
+        totalCount = productService.findCountByCsid(cid);
+        productPageBean.setTotalCount(totalCount);
+        int totalPage = 0;
+        if (totalCount % limit == 0) {
+            totalPage = totalCount / limit;
+        } else {
+            totalPage = totalCount / limit + 1;
+        }
+        //从哪条记录数开始
+        int  begin=(page-1)*limit;
+        productPageBean.setTotalPage(totalPage);
+        List<Product> list=productService.getProductsByCsid(cid,begin,limit);
+        productPageBean.setList(list);
+        //将pageBean放入值栈中
+        ActionContext.getContext().getValueStack().set("pageBean",productPageBean);
+        System.out.println(productPageBean);
+        ActionContext.getContext().getValueStack().setValue("cid",cid);
+        return "findByCsid";
     }
 
 }

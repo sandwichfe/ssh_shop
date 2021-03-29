@@ -49,7 +49,6 @@
 				</ul>
 			</div>
 
-
 			<table>
 				<tbody>
 					<s:iterator var="order" value="pageBean.list">

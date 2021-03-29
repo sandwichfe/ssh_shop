@@ -2,6 +2,8 @@ package com.lww.action;
 
 import com.lww.Dao.CategorySecondDao;
 import com.lww.Dao.ProductDao;
+import com.lww.sevice.CategorySecondService;
+import com.lww.sevice.ProductService;
 import com.lww.utils.pageUtils.PageBean;
 import com.lww.vo.Category;
 import com.lww.vo.CategorySecond;
@@ -54,15 +56,15 @@ public class AdminProductAction extends ActionSupport implements ModelDriven<Pro
     }
 
     @Autowired
-    ProductDao productDao;
+    ProductService productService;
 
     @Autowired
-    CategorySecondDao categorySecondDao;
+    CategorySecondService categorySecondService;
 
     public String findAll() {
 
         PageBean<Product> productPageBean = new PageBean<>();
-        List<Product> products = productDao.findAll();
+        List<Product> products = productService.findAll();
         productPageBean.setList(products);
         //放入值栈
         ActionContext.getContext().getValueStack().set("pageBean", productPageBean);
@@ -73,7 +75,7 @@ public class AdminProductAction extends ActionSupport implements ModelDriven<Pro
     //添加商品
     public String addPage() {
         //查询出所有二级分类
-        List<CategorySecond> categoryList = categorySecondDao.findAll();
+        List<CategorySecond> categoryList = categorySecondService.findAll();
 
         ActionContext.getContext().getValueStack().set("csList", categoryList);
 
@@ -96,13 +98,13 @@ public class AdminProductAction extends ActionSupport implements ModelDriven<Pro
             //product属性路径设置进去
             product.setImage("products/" + uploadFileName);
         }
-        productDao.save(product);
+        productService.save(product);
         return "saveSuccess";
     }
 
     public String delete() {
         //
-        product = productDao.getById(product.getPid());
+        product = productService.getById(product.getPid());
         //删除关联的图片
         String path = product.getImage();
         if (path != null) {
@@ -110,7 +112,7 @@ public class AdminProductAction extends ActionSupport implements ModelDriven<Pro
             File file = new File(realPath);
             file.delete();
         }
-        productDao.delete(product);
+        productService.delete(product);
         return "deleteSuccess";
     }
 
@@ -118,9 +120,9 @@ public class AdminProductAction extends ActionSupport implements ModelDriven<Pro
     //跳转视图 并且回显数据
     public String edit() {
         //根据传过来的cid 查询当前的category信息
-        product = productDao.getById(product.getPid());
+        product = productService.getById(product.getPid());
         //查询所有二级分类数据 并放入到值栈中
-        List<CategorySecond> categoryList = categorySecondDao.findAll();
+        List<CategorySecond> categoryList = categorySecondService.findAll();
         ActionContext.getContext().getValueStack().set("csList", categoryList);
         return "edit";
     }
@@ -150,7 +152,7 @@ public class AdminProductAction extends ActionSupport implements ModelDriven<Pro
             //product属性路径设置进去
             product.setImage("products/" + uploadFileName);
         }
-        productDao.update(product);
+        productService.update(product);
         return "editSuccess";
     }
 

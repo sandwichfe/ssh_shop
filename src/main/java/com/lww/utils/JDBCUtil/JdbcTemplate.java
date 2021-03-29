@@ -5,8 +5,6 @@ import com.lww.utils.JDBCUtil.handler.IResultSetHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
 
 //Jdbc操作的模板类
 @Component

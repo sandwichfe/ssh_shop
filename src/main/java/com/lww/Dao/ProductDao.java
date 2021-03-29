@@ -28,7 +28,6 @@ public class ProductDao {
     public Product get(Integer pid) {
         return (Product) jdbcTemplate.query("select * from product where pid = ?",new BeanHandler<>(Product.class),pid);
     }
-
     public int findCountByCid(Integer cid) {
         return jdbcTemplate.query("select count(*) from categorysecond cs\n" +
                 "\t\t\t\t\t\t\t\t,category c\n" +
@@ -75,5 +74,29 @@ public class ProductDao {
         jdbcTemplate.update("update product set pname  = ? ,market_price  = ?,shop_price  = ?,image  = ?,pdesc  = ?,is_hot  = ?,pdate  = ?,csid  = ? where pid = ?",
                 product.getPname(),product.getMarket_price(),product.getShop_price(),product.getImage(),product.getPdesc(),product.getIs_hot(),
                 product.getPdate(),product.getCsid(),product.getPid());
+    }
+
+    public int findCountByCsid(Integer csid) {
+        return jdbcTemplate.query("select count(*) from categorysecond cs\n" +
+                "\t\t\t\t\t\t\t\t,category c\n" +
+                "\t\t\t\t\t\t\t\t,product p\n" +
+                "\t\t\t\t\t\t\t\twhere p.csid= cs.csid and cs. cid = c.cid and cs.csid= ?", new IResultSetHandler<Integer>() {
+            @Override
+            public Integer handle(ResultSet rs) throws Exception {
+                if (rs.next()){
+                    //System.out.println("rows:-----------------------"+rs.getInt(1));   查询条数结果集肯定只有一条结果啊  取第一条结果即可。。。。。。
+                    return rs.getInt(1);     //得到最后一行的行数并返回
+                }
+                //结果集为空就返回o条
+                return 0;
+            }
+        },csid);
+    }
+
+    public List<Product> getProductsByCsid(Integer cid, int begin, int limit) {
+        return jdbcTemplate.query("select * from categorysecond cs\n" +
+                "\t\t\t\t\t\t\t\t,category c\n" +
+                "\t\t\t\t\t\t\t\t,product p\n" +
+                "\t\t\t\t\t\t\t\twhere p.csid= cs.csid and cs. cid = c.cid and cs.csid = ? limit ? , ?",new BeanListHandler<>(Product.class),cid,begin,limit);
     }
 }

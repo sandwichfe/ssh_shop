@@ -3,6 +3,8 @@ package com.lww.action;
 
 import com.lww.Dao.CategoryDao;
 import com.lww.Dao.CategorySecondDao;
+import com.lww.sevice.CategorySecondService;
+import com.lww.sevice.CategoryService;
 import com.lww.utils.pageUtils.PageBean;
 import com.lww.vo.Category;
 import com.lww.vo.CategorySecond;
@@ -38,14 +40,14 @@ public class AdminCategorySecondAction extends ActionSupport implements ModelDri
     }
 
     @Autowired
-    CategorySecondDao categorySecondDao;
+    CategorySecondService categorySecondService;
 
     @Autowired
-    CategoryDao categoryDao;
+    CategoryService categoryService;
 
     //查询所有二级分类
     public String findAll() {
-        List<CategorySecond> list= categorySecondDao.findAll();
+        List<CategorySecond> list= categorySecondService.findAll();
         PageBean<CategorySecond> categorySecondPageBean=new PageBean<>();
         categorySecondPageBean.setList(list);
         //将集合数据放入值栈中
@@ -58,7 +60,7 @@ public class AdminCategorySecondAction extends ActionSupport implements ModelDri
     public String addPage(){
 
         //查询出所有一级分类
-        List<Category> categoryList=categoryDao.findAll();
+        List<Category> categoryList=categoryService.findAll();
 
         //放入值栈中 用于添加一级分类时 显示一个下拉框用于选择
         ActionContext.getContext().getValueStack().set("cList",categoryList);
@@ -69,25 +71,25 @@ public class AdminCategorySecondAction extends ActionSupport implements ModelDri
     //保存二级分类
     public String save(){
         categorySecond.setCid(cidUseForAdd);
-        categorySecondDao.save(categorySecond);
+        categorySecondService.save(categorySecond);
         return "saveSuccess";
     }
 
 
     //删除二级分类   同时删除关联的商品
     public String delete(){
-        categorySecondDao.delete(categorySecond);
+        categorySecondService.delete(categorySecond);
         return "deleteSuccess";
     }
 
     //跳转视图 并且回显数据
     public String edit(){
         //根据传过来的cid 查询当前的category信息
-        categorySecond=categorySecondDao.getById(categorySecond.getCsid());
+        categorySecond=categorySecondService.getById(categorySecond.getCsid());
         System.out.println(categorySecond);
         //查询所有一级分类数据 并放入到值栈中
         //查询出所有一级分类
-        List<Category> categoryList=categoryDao.findAll();
+        List<Category> categoryList=categoryService.findAll();
         ActionContext.getContext().getValueStack().set("cList",categoryList);
         return "edit";
     }
@@ -95,7 +97,7 @@ public class AdminCategorySecondAction extends ActionSupport implements ModelDri
     //编辑二级分类
     public String update(){
         categorySecond.setCid(cidUseForAdd);
-       categorySecondDao.update(categorySecond);    //得到修改完成之后的新信息
+        categorySecondService.update(categorySecond);    //得到修改完成之后的新信息
         return "editSuccess";
     }
 }

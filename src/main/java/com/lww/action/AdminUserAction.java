@@ -2,6 +2,7 @@ package com.lww.action;
 
 
 import com.lww.Dao.AdminUserDao;
+import com.lww.sevice.AdminUserService;
 import com.lww.vo.AdminUser;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
@@ -18,10 +19,10 @@ public class AdminUserAction extends ActionSupport implements ModelDriven<AdminU
     }
 
     @Autowired
-    AdminUserDao adminUserDao;
+    AdminUserService adminUserService;
 
     public String login(){
-        AdminUser loginAdminUser=adminUserDao.get(adminUser);
+        AdminUser loginAdminUser=adminUserService.get(adminUser);
         if (loginAdminUser==null){
             this.addActionError("账号或密码错误！");
             return "login";

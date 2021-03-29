@@ -1,6 +1,7 @@
 package com.lww.action;
 
 import com.lww.Dao.ProductDao;
+import com.lww.sevice.ProductService;
 import com.lww.vo.Cart;
 import com.lww.vo.CartItem;
 import com.lww.vo.Product;
@@ -16,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CartAction extends ActionSupport {
 
     @Autowired
-    private ProductDao productDao;
+    private ProductService productService;
 
     //用于接受商品pid  以及购买数量
     private Integer pid;
@@ -37,7 +38,7 @@ public class CartAction extends ActionSupport {
         //一个购物项对象
         CartItem cartItem = new CartItem();
 
-        Product product = productDao.get(pid);
+        Product product = productService.get(pid);
         cartItem.setProduct(product);
         cartItem.setCount(count);
 

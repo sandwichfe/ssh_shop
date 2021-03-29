@@ -25,7 +25,7 @@
 		
 			<li><a>会员中心</a> |</li>
 			<li><a>购物指南</a> |</li>
-			<li><a>关于我们</a></li>
+			<li><a href="${pageContext.request.contextPath}/admin/index.jsp" target="_blank">后台管理</a></li>
 		</ul>
 	</div>
 	<div class="cart">

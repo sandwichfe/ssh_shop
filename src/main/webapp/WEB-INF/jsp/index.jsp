@@ -9,7 +9,6 @@
 <link href="${pageContext.request.contextPath}/css/slider.css" rel="stylesheet" type="text/css"/>
 <link href="${pageContext.request.contextPath}/css/common.css" rel="stylesheet" type="text/css"/>
 <link href="${pageContext.request.contextPath}/css/index.css" rel="stylesheet" type="text/css"/>
-
 </head>
 <body>
 
@@ -25,10 +24,8 @@
 	<img src="${pageContext.request.contextPath}/image/header.jpg" width="320" height="50" alt="正品保障" title="正品保障"/>
 </div>	
 </div>
-	
 	<%@ include file="menu.jsp" %>
-
-</div>	
+</div>
 <div class="container index">
 		<div class="span24">
 			<div id="hotProduct" class="hotProduct clearfix">

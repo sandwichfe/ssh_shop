@@ -2,6 +2,7 @@ package com.lww.action;
 
 
 import com.lww.Dao.CategoryDao;
+import com.lww.sevice.CategoryService;
 import com.lww.vo.Category;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -25,11 +26,11 @@ public class AdminCategoryAction extends ActionSupport implements ModelDriven<Ca
 
 
     @Autowired
-    CategoryDao categoryDao;
+    CategoryService categoryService;
 
     //查询所有一级分类
     public String findAll() {
-        List<Category> list= categoryDao.findAll();
+        List<Category> list= categoryService.findAll();
         //将集合数据放入值栈中
         ActionContext.getContext().getValueStack().set("cList",list);
         return "findAll";
@@ -39,27 +40,27 @@ public class AdminCategoryAction extends ActionSupport implements ModelDriven<Ca
 
     //添加一级分类
     public String saveCategory(){
-        categoryDao.save(category);
+        categoryService.save(category);
         return "saveSuccess";
     }
 
 
     //删除一级分类  同时对应关联的二级分类也要删除
     public String delete(){
-        categoryDao.remove(category);
+        categoryService.remove(category);
         return "deleteSuccess";
     }
 
     //编辑一级分类
     public String edit(){
         //根据传过来的cid 查询当前的category信息
-        category=categoryDao.getById(category.getCid());
+        category=categoryService.getById(category.getCid());
         return "edit";
     }
 
     //编辑一级分类
     public String update(){
-        categoryDao.update(category);    //得到修改完成之后的新信息
+        categoryService.update(category);    //得到修改完成之后的新信息
         return "editSuccess";
     }
 }

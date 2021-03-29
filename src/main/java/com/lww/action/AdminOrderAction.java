@@ -1,6 +1,7 @@
 package com.lww.action;
 
 import com.lww.Dao.OrderDao;
+import com.lww.sevice.OrderService;
 import com.lww.utils.pageUtils.PageBean;
 import com.lww.vo.Order;
 import com.lww.vo.OrderItem;
@@ -30,28 +31,28 @@ public class AdminOrderAction extends ActionSupport implements ModelDriven<Order
     }
 
     @Autowired
-    OrderDao orderDao;
+    OrderService orderService;
 
     public String findAll(){
         PageBean<Order> pageBean=new PageBean<>();
-        List<Order> orders=orderDao.findAll();
+        List<Order> orders=orderService.findAll();
         pageBean.setList(orders);
         ActionContext.getContext().getValueStack().set("pageBean",pageBean);
         return "findAll";
     }
 
     public String findOrderItem(){
-        List<OrderItem > list=orderDao.getItemsByOid(order.getOid());
+        List<OrderItem > list=orderService.getItemsByOid(order.getOid());
         ActionContext.getContext().getValueStack().set("list",list);
         return "findOrderItem";
     }
 
     //修改订单状态
     public String updateState(){
-        Order currentOrder=orderDao.getByOid(order.getOid());
+        Order currentOrder=orderService.getByOid(order.getOid());
         //修改订单状态
         currentOrder.setState(3);
-        orderDao.updateState(currentOrder);
+        orderService.updateState(currentOrder);
         return "updateStateSuccess";
     }
 
