@@ -41,4 +41,18 @@
 
 
 
+
+    <servlet>
+        <servlet-name>register</servlet-name>
+        <servlet-class> com.lww.action.RegisterServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>register</servlet-name>
+        <url-pattern>/RegisterServlet.do</url-pattern>
+    </servlet-mapping>
+
+
+
+
 </web-app>
