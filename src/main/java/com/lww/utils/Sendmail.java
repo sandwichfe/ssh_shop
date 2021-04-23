@@ -20,7 +20,7 @@ public class Sendmail extends Thread {
     //邮箱的用户名
     private String username = "1344382941@qq.com";
     //邮箱的密码
-    private String password = "bwmvdultstkjjeee";
+    private String password = "bwmvdultstkjjeee";       //这里就是 凭证码  不是 登录密码
     //发送邮件的服务器地址
     private String host = "smtp.qq.com";
 
